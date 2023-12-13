@@ -1,5 +1,5 @@
 streamlit>=1.23.1
 opencv-python
-dlib==19.22.0
+dlib
 cmake==3.21.3
 
