@@ -165,15 +165,18 @@ def trackMultipleObjects():
 
 # Streamlit app
 def main():
-    st.title("Speed Detection App")
+    st.title("Vehicle Speed Detection")
+    st.write("Upload a video file for speed detection.")
 
     uploaded_file = st.file_uploader("Choose a video file", type=["mp4"])
 
     if uploaded_file is not None:
         video_bytes = uploaded_file.read()
 
-        video = cv2.VideoCapture(io.BytesIO(video_bytes))
-        trackMultipleObjects()
+        with open("files/videoTest.mp4", "wb") as video_writer:
+            video_writer.write(video_bytes)
 
-if __name__ == '__main__':
+        track_multiple_objects()
+
+if __name__ == "__main__":
     main()
