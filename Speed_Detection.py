@@ -3,13 +3,14 @@ import dlib
 import time
 from datetime import datetime
 import os
+import streamlit as st
 import numpy as np
 
 #CLASSIFIER FOR DETECTING CARS--------------------------------------------------
-carCascade = cv2.CascadeClassifier('files/HaarCascadeClassifier.xml')
+carCascade = cv2.CascadeClassifier('HaarCascadeClassifier.xml')
 
 #TAKE VIDEO---------------------------------------------------------------------
-video = cv2.VideoCapture('files/videoTest.mp4')
+video = cv2.VideoCapture('videoTest.mp4')
 
 WIDTH = 1280 #WIDTH OF VIDEO FRAME
 HEIGHT = 720 #HEIGHT OF VIDEO FRAME
@@ -23,8 +24,8 @@ startTracker = {} #STORE STARTING TIME OF CARS
 endTracker = {} #STORE ENDING TIME OF CARS
 
 #MAKE DIRCETORY TO STORE OVER-SPEEDING CAR IMAGES
-if not os.path.exists('overspeeding/cars/'):
-    os.makedirs('overspeeding/cars/')
+if not os.path.exists('overspeeding/vehicles/'):
+    os.makedirs('overspeeding/vehicles/')
 
 print('Speed Limit Set at 20 Kmph')
 
@@ -44,7 +45,7 @@ def saveCar(speed,image):
     now = datetime.today().now()
     nameCurTime = now.strftime("%d-%m-%Y-%H-%M-%S-%f")
 
-    link = 'overspeeding/cars/'+nameCurTime+'.jpeg'
+    link = 'overspeeding/vehicles/'+nameCurTime+'.jpeg'
     cv2.imwrite(link,image)
 
 #FUNCTION TO CALCULATE SPEED----------------------------------------------------
@@ -160,5 +161,26 @@ def trackMultipleObjects():
 
     cv2.destroyAllWindows()
 
-if __name__ == '__main__':
-    trackMultipleObjects()
+# Streamlit app
+def app():
+    st.title("Speed Detection App")
+
+    uploaded_file = st.file_uploader("Choose a video file", type=["mp4"])
+
+    if uploaded_file is not None:
+        video_frames = []
+        video_bytes = uploaded_file.read()
+
+        cap = cv2.VideoCapture(io.BytesIO(video_bytes))
+
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
+            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            video_frames.append(Image.fromarray(frame))
+
+        trackMultipleObjects(video_frames)
+
+if _name_ == '_main_':
+    app()
