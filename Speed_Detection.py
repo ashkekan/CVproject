@@ -162,7 +162,7 @@ def trackMultipleObjects():
     cv2.destroyAllWindows()
 
 # Streamlit app
-def app():
+def main():
     st.title("Speed Detection App")
 
     uploaded_file = st.file_uploader("Choose a video file", type=["mp4"])
@@ -183,4 +183,4 @@ def app():
         trackMultipleObjects(video_frames)
 
 if _name_ == '_main_':
-    app()
+    main()
